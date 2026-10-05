@@ -1,0 +1,69 @@
+# examples/tricks.car.yaml: car phrases for a phrase->action voice router.
+#
+# Format is the "tricks" list of my voice assistant (a separate project): `phrases` match the
+# WHOLE utterance, case- and punctuation-insensitive; `regex` is searched. A `shell` action is
+# forced to ask "are you sure?" unless the trick says `readonly: true`.
+#
+# Every action calls fleet/car.py (argv is not run through a shell, so give the absolute path), which calls car_service. `--say` makes the service speak the
+# answer, because a trick's own stdout is logged, not spoken.
+#
+# Policy used here: reads, navigation, climate and media run without a yes/no. Honk, flash and
+# sentry are left out of voice (if you add them, omit `readonly` so the router asks first). Lock, unlock, trunk and windows are not exposed at all.
+# Test negatives too: "turn on the AC" is the HOUSE, not the car.
+
+- name: car battery
+  phrases: ["car battery", "the car battery", "how's the car", "how is the car",
+            "how much battery does the car have"]
+  regex:
+    - '^\W*(?:how[''’]?s|how is|check(?: on)?|what[''’]?s)\s+(?:the\s+|my\s+)?(?:car|tesla)(?:[''’]?s)?(?:\s+(?:battery|charge|charging))?(?:\s+(?:level|at))?\W*$'
+  actions:
+    - shell: ["python3", "/home/you/tesla-fleet-voice/fleet/car.py", "battery", "--say"]
+  readonly: true
+  enabled: true
+
+- name: car temperature
+  phrases: ["car temperature", "car temp", "how hot is the car", "how cold is the car",
+            "how hot is it in the car", "what's the temperature in the car", "is the car hot"]
+  regex:
+    - '^\W*how\s+(?:hot|cold|warm)\s+is\s+(?:it\s+in\s+)?(?:the\s+|my\s+)?(?:car|tesla)\W*$'
+  actions:
+    - shell: ["python3", "/home/you/tesla-fleet-voice/fleet/car.py", "temp", "--say"]
+  readonly: true
+  enabled: true
+
+- name: car navigate home
+  phrases: ["navigate home", "car navigate home", "send home to the car", "take the car home"]
+  actions:
+    - shell: ["python3", "/home/you/tesla-fleet-voice/fleet/car.py", "nav", "home", "--say"]
+  readonly: true
+  enabled: true
+
+- name: car climate on
+  phrases: ["get the car ready", "cool down the car", "cool the car", "precool the car",
+            "pre cool the car", "start the car ac", "turn on the car ac", "warm up the car", "car climate on"]
+  actions:
+    - shell: ["python3", "/home/you/tesla-fleet-voice/fleet/car.py", "cmd", "climate-on", "--say"]
+  readonly: true
+  enabled: true
+
+- name: car climate off
+  phrases: ["turn off the car ac", "car ac off", "car climate off", "stop cooling the car"]
+  actions:
+    - shell: ["python3", "/home/you/tesla-fleet-voice/fleet/car.py", "cmd", "climate-off", "--say"]
+  readonly: true
+  enabled: true
+
+- name: car next song
+  phrases: ["car next song", "next song in the car", "skip the song in the car", "car skip"]
+  actions:
+    - shell: ["python3", "/home/you/tesla-fleet-voice/fleet/car.py", "cmd", "media-next", "--say"]
+  readonly: true
+  enabled: true
+
+- name: car pause
+  phrases: ["pause the car music", "car pause", "car play", "resume the car music"]
+  actions:
+    - shell: ["python3", "/home/you/tesla-fleet-voice/fleet/car.py", "cmd", "media-toggle", "--say"]
+  readonly: true
+  enabled: true
+

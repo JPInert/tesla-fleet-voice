@@ -1,0 +1,14 @@
+# ~/.config/systemd/user/car-service.service  (assumes the repo is cloned to ~/tesla-fleet-voice)
+[Unit]
+Description=car_service - Tesla reads/commands for voice and phone, LAN/VPN + bearer only
+After=network-online.target
+
+[Service]
+# User units get no shell profile; the scripts need only python3 and the standard library.
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+ExecStart=/usr/bin/python3 %h/tesla-fleet-voice/fleet/car_service.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

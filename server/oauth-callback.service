@@ -1,0 +1,20 @@
+# /etc/systemd/system/tesla-oauth-callback.service on the web server.
+# Replace www-tesla with an unprivileged user that can read the script.
+[Unit]
+Description=Tesla Fleet API OAuth callback receiver (localhost only, behind nginx)
+After=network.target
+
+[Service]
+Type=simple
+User=www-tesla
+Group=www-tesla
+ExecStart=/usr/bin/python3 /opt/tesla-fleet-voice/server/oauth_callback.py
+StateDirectory=tesla-fleet
+ProtectSystem=strict
+ProtectHome=read-only
+NoNewPrivileges=yes
+PrivateTmp=yes
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
