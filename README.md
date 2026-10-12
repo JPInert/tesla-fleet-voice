@@ -2,7 +2,7 @@
 
 A small home service that reads and commands a Tesla through my own Tesla Fleet API app, so my voice assistant and a watchdog timer can use the car without the Tesla app.
 
-> **Status: in testing.** It runs for me every day (voice phrases, navigation, alerts, history) and is still being tested and changed. Add-a-stop and the Google fallback are the newest parts and have the fewest real runs. Only the North America Fleet API region has been used.
+> **Status: in testing.** The service this is extracted from runs for me every day (voice phrases, navigation, alerts, history); this copy has run only against its 49 tests, not the car yet. Both are still being tested and changed. Add-a-stop and the Google fallback are the newest parts and have the fewest real runs. Only the North America Fleet API region has been used.
 
 ## Why I built it
 
@@ -77,7 +77,7 @@ flowchart LR
 
 ## What I've measured
 
-From my own logs and notes; small numbers.
+From my own logs and notes; small numbers. They come from the service running on my car, which this repo is extracted from. The extract itself has only run against fakes (49 tests, no car); I have not pointed this copy at the car yet.
 
 - **Watchdog cost**, 2026-10-02 22:17 to 2026-10-05 09:00: 199 runs made an API call. 166 were state-only checks (153 found the car offline/asleep), 33 were `vehicle_data` reads. It never woke the car. Real alerts in that window: 1 charge complete, 1 left unlocked (n=2, plus 2 manual test alerts).
 - **History DB**, 2026-10-02 to 2026-10-11: 136 readings (from 2026-10-02 22:12) and 89 online/offline state changes (from 2026-10-03 07:04) stored, with no extra API calls (every row comes from a read that was already happening).
