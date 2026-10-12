@@ -10,7 +10,7 @@ DRY by default: prints the exact request with the VIN masked and sends nothing.
     tesla_nav.py --send --place home                              # a name from places.json
 
 The body mimics the phone's "share to Tesla" intent; the car geocodes the text itself, so a
-full street address (or a Google Maps link) works best.
+full street address works best. A plain web URL is refused (HTTP 400 src_not_supported).
 """
 import json
 import sys

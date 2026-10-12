@@ -28,6 +28,8 @@ def main():
         'redirect_uri': config.redirect_uri(),
         'scope': config.SCOPES,
         'state': state,
+        # without this, re-authorizing to ADD a scope silently reuses the old grant (seen twice)
+        'prompt_missing_scopes': 'true',
     }))
 
 

@@ -22,7 +22,9 @@ DB = Path(os.environ.get('TESLA_FLEET_DB', '~/.local/share/tesla-fleet-voice/his
 
 AUTH_URL = 'https://fleet-auth.prd.vn.cloud.tesla.com/oauth2/v3/token'
 AUTHORIZE_URL = 'https://auth.tesla.com/oauth2/v3/authorize'
-SCOPES = 'openid offline_access vehicle_device_data vehicle_cmds vehicle_charging_cmds'
+# vehicle_location: "nearest" is measured from where the car is. Adding a scope to an existing grant needs
+# prompt_missing_scopes=true on the authorize link (setup_start_oauth.py sends it).
+SCOPES = 'openid offline_access vehicle_device_data vehicle_location vehicle_cmds vehicle_charging_cmds'
 
 _file_cache = None
 
@@ -82,7 +84,8 @@ def allowed_networks():
 
 
 def home_latlon():
-    """HOME_LAT/HOME_LON, or None. Only used to rank map-search hits by distance."""
+    """HOME_LAT/HOME_LON, or None. The map-search centre when the car's position is unknown (no live
+    read and no last fix), and the coordinates of a "home" stop."""
     lat, lon = setting('HOME_LAT'), setting('HOME_LON')
     return (float(lat), float(lon)) if lat and lon else None
 
